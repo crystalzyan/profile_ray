@@ -23,34 +23,38 @@ def aggregation_set(ray_df):
 
 	# Groupby
 	ray_groupby = ray_df.groupby(ray_df.passenger_count)
-	result = ray_groupby.trip_distance.mean()
+	# Ray does not support getting column from groupby below
+	# result = ray_groupby.trip_distance.mean()
 
 	# Filter, new column
 	ray_df2 = ray_df[(ray_df.tip_amount > 0) & (ray_df.fare_amount > 0)]
 	ray_df2["tip_fraction"] = ray_df2.tip_amount / ray_df2.fare_amount
 
 	# Groupby and mean on filtered
-	day_of_week = (ray_df2.groupby(ray_df2.tpep_pickup_datetime.dt.dayofweek)['tip_fraction'].mean())
-  	hour = (ray_df2.groupby(ray_df2.tpep_pickup_datetime.dt.hour)['tip_fraction'].mean())
+	# Ray does not support getting column from groupby below
+	# day_of_week = (ray_df2.groupby(ray_df2.tpep_pickup_datetime.dt.dayofweek)['tip_fraction'].mean())
+ 	# hour = (ray_df2.groupby(ray_df2.tpep_pickup_datetime.dt.hour)['tip_fraction'].mean())
   
 
 @profile
 def merge_set(ray_df):
 	# Merge
 	ray_payments = pd.DataFrame({'num':[1, 2, 3, 4, 5, 6], 
-	              'payment_method':['Credit Card', 'Cash', 'No Charge', 
+	              'payment_name':['Credit Card', 'Cash', 'No Charge', 
 	                              'Dispute', 'Unknown', 'Voided trip']})
 	ray_df2 = ray_df.merge(ray_payments, left_on="payment_type", right_on="num")
 
 	# Groupby on Merge
 	ray2_groupby = ray_df2.groupby(ray_df2.payment_name)
-	result = ray2_groupby.tip_amount.mean()
+	# Ray does not support getting column from groupby below
+	# result = ray2_groupby.tip_amount.mean()
 
 	# Boolean correlation
 	ray_bool1 = ray_df2.tip_amount == 0
 	ray_bool2 = ray_df2.payment_name == 'Cash'
 	ray_bools = pd.concat([ray_bool1, ray_bool2], axis=1)
-	result = ray_bools.corr()
+	# Ray does not support dataframe.corr
+	# result = ray_bools.corr()
 
 
 @profile
@@ -62,8 +66,10 @@ def shuffle_set(ray_df):
 	# Accesses
 	result = ray_df.head()
 	result = ray_df.tail()
-	ray_loc = ray_df.loc['2015-01-10 19:01:44']
-	result = ray_loc.head()
+
+	# Ray fails at non-unique indices
+	# ray_loc = ray_df.loc['2015-01-10 19:01:44']
+	# result = ray_loc.head()
 
 
 @profile

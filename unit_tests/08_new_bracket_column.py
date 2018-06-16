@@ -3,7 +3,7 @@ import ray.dataframe as pd
 
 print('############ 8: Test Ray New Column by [Column] #############')
 
-ray_df = pd.read_csv("yellow_tripdata_2015-01.csv")
+ray_df = pd.read_csv("yellow_1of3.csv")
 
 print('    Read_CSV finished. Result:')
 print(ray_df.head(3))
