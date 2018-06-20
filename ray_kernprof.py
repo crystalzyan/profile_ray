@@ -2,10 +2,10 @@ import ray.dataframe as pd
 #import pandas as pd
 
 @profile
-def basic_set(csvStr):
+def basic_set(csvStr, csvStr2):
 	# Import CSV
 	ray_df = pd.read_csv(csvStr) 
-	ray_df2 = pd.read_csv(csvStr, 
+	ray_df2 = pd.read_csv(csvStr2, 
          parse_dates=['tpep_pickup_datetime', 'tpep_dropoff_datetime'])
 
 	# Accesses
@@ -88,8 +88,10 @@ def timeseries_set(ray_df):
 
 
 def main():
-	csvStr = "yellow_tripdata_2015-01.csv"
-	df = basic_set(csvStr)
+	#csvStr = "unit_tests/yellow_tripdata_2015-01-01.csv"
+	csvStr = "unit_tests/yellow_2of5.csv"
+	csvStr2 = "unit_tests/yellow_3of5.csv"
+	df = basic_set(csvStr, csvStr2)
 	aggregation_set(df)
 	merge_set(df)
 	shuffle_set(df)

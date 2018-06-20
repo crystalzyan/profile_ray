@@ -1,0 +1,1028 @@
+ubuntu@ip-172-31-50-6:~/profile_ray$ python dask_port.py
+Process STDOUT and STDERR is being redirected to /tmp/raylogs/.
+Waiting for redis server at 127.0.0.1:53816 to respond...
+Waiting for redis server at 127.0.0.1:36797 to respond...
+Starting local scheduler with the following resources: {'CPU': 16, 'GPU': 0}.
+
+======================================================================
+View the web UI at http://localhost:8902/notebooks/ray_ui42117.ipynb?token=16b4c4e41200a05f53a668280bfa7ba844391d971ecf28c4
+======================================================================
+
+Running profile on Ray using 1/12 of data from Dask example
+Data used in this example is 1.99 GB
+############# SECTION: CSV DATA AND BASIC OPERATIONS #############
+
+01: Profiling df = read_csv()
+--------------------------------------------------
+Ray took (hh:mm:ss.ms) 0:00:00.044006
+Pandas took (hh:mm:ss.ms) 0:00:45.422094
+
+02: Profiling df.head()
+--------------------------------------------------
+
+Ray's result:
+   VendorID tpep_pickup_datetime tpep_dropoff_datetime  passenger_count  \
+0         2  2015-01-15 19:05:39   2015-01-15 19:23:42                1   
+1         1  2015-01-10 20:33:38   2015-01-10 20:53:28                1   
+2         1  2015-01-10 20:33:38   2015-01-10 20:43:41                1   
+3         1  2015-01-10 20:33:39   2015-01-10 20:35:31                1   
+4         1  2015-01-10 20:33:39   2015-01-10 20:52:58                1   
+
+   trip_distance  pickup_longitude  pickup_latitude  RateCodeID  \
+0           1.59        -73.993896        40.750111           1   
+1           3.30        -74.001648        40.724243           1   
+2           1.80        -73.963341        40.802788           1   
+3           0.50        -74.009087        40.713818           1   
+4           3.00        -73.971176        40.762428           1   
+
+  store_and_fwd_flag  dropoff_longitude  dropoff_latitude  payment_type  \
+0                  N         -73.974785         40.750618             1   
+1                  N         -73.994415         40.759109             1   
+2                  N         -73.951820         40.824413             2   
+3                  N         -74.004326         40.719986             2   
+4                  N         -74.004181         40.742653             2   
+
+   fare_amount  extra  mta_tax  tip_amount  tolls_amount  \
+0         12.0    1.0      0.5        3.25           0.0   
+1         14.5    0.5      0.5        2.00           0.0   
+2          9.5    0.5      0.5        0.00           0.0   
+3          3.5    0.5      0.5        0.00           0.0   
+4         15.0    0.5      0.5        0.00           0.0   
+
+   improvement_surcharge  total_amount  
+0                    0.3         17.05  
+1                    0.3         17.80  
+2                    0.3         10.80  
+3                    0.3          4.80  
+4                    0.3         16.30  
+
+Ray took (hh:mm:ss.ms) 0:00:00.025908
+
+Pandas's result:
+   VendorID tpep_pickup_datetime tpep_dropoff_datetime  passenger_count  \
+0         2  2015-01-15 19:05:39   2015-01-15 19:23:42                1   
+1         1  2015-01-10 20:33:38   2015-01-10 20:53:28                1   
+2         1  2015-01-10 20:33:38   2015-01-10 20:43:41                1   
+3         1  2015-01-10 20:33:39   2015-01-10 20:35:31                1   
+4         1  2015-01-10 20:33:39   2015-01-10 20:52:58                1   
+
+   trip_distance  pickup_longitude  pickup_latitude  RateCodeID  \
+0           1.59        -73.993896        40.750111           1   
+1           3.30        -74.001648        40.724243           1   
+2           1.80        -73.963341        40.802788           1   
+3           0.50        -74.009087        40.713818           1   
+4           3.00        -73.971176        40.762428           1   
+
+  store_and_fwd_flag  dropoff_longitude  dropoff_latitude  payment_type  \
+0                  N         -73.974785         40.750618             1   
+1                  N         -73.994415         40.759109             1   
+2                  N         -73.951820         40.824413             2   
+3                  N         -74.004326         40.719986             2   
+4                  N         -74.004181         40.742653             2   
+
+   fare_amount  extra  mta_tax  tip_amount  tolls_amount  \
+0         12.0    1.0      0.5        3.25           0.0   
+1         14.5    0.5      0.5        2.00           0.0   
+2          9.5    0.5      0.5        0.00           0.0   
+3          3.5    0.5      0.5        0.00           0.0   
+4         15.0    0.5      0.5        0.00           0.0   
+
+   improvement_surcharge  total_amount  
+0                    0.3         17.05  
+1                    0.3         17.80  
+2                    0.3         10.80  
+3                    0.3          4.80  
+4                    0.3         16.30  
+
+Pandas took (hh:mm:ss.ms) 0:00:00.000271
+
+############# SECTION: BASIC AGGREGATIONS AND GROUPBYS #############
+
+03: Profiling len(df)
+--------------------------------------------------
+
+Ray's result:
+12748986
+
+Ray took (hh:mm:ss.ms) 0:00:00.000019
+
+Pandas's result:
+12748986
+
+Pandas took (hh:mm:ss.ms) 0:00:00.000007
+
+04: Profiling df_groupby = df.groupby(df.column)
+--------------------------------------------------
+
+Ray's result:
+         VendorID tpep_pickup_datetime tpep_dropoff_datetime  passenger_count  \
+0               2  2015-01-15 19:05:39   2015-01-15 19:23:42                1   
+7               1  2015-01-10 20:33:39   2015-01-10 20:42:20                3   
+9               1  2015-01-10 20:33:40   2015-01-10 20:40:44                2   
+16              2  2015-01-15 19:05:40   2015-01-15 19:21:00                5   
+29              2  2015-01-15 19:05:42   2015-01-15 19:21:40                6   
+48              2  2015-01-25 00:13:07   2015-01-25 00:27:08                4   
+1364            1  2015-01-26 13:55:39   2015-01-26 13:58:54                0   
+5845            2  2015-01-02 20:14:40   2015-01-02 20:14:44                9   
+958964          2  2015-01-16 03:09:54   2015-01-16 03:09:57                7   
+1725160         1  2015-01-21 20:16:10   2015-01-21 20:16:37                8   
+
+         trip_distance  pickup_longitude  pickup_latitude  RateCodeID  \
+0                 1.59        -73.993896        40.750111           1   
+7                 0.80        -74.002663        40.734142           1   
+9                 0.90        -73.985588        40.767948           1   
+16                2.83        -73.968704        40.754246           1   
+29                5.19        -73.985291        40.744083           1   
+48                3.06        -73.992638        40.723793           1   
+1364              0.40        -73.963600        40.774048           1   
+5845              0.00        -73.950310        40.827042           5   
+958964            0.00          0.000000         0.000000           5   
+1725160           0.00        -73.975502        40.759640           1   
+
+        store_and_fwd_flag  dropoff_longitude  dropoff_latitude  payment_type  \
+0                        N         -73.974785         40.750618             1   
+7                        N         -73.995010         40.726326             1   
+9                        N         -73.985916         40.759365             1   
+16                       N         -73.955124         40.786858             2   
+29                       N         -74.009079         40.704689             1   
+48                       N         -73.964050         40.756866             1   
+1364                     N         -73.959229         40.780148             2   
+5845                     N         -73.950333         40.827053             1   
+958964                   N         -73.969177         40.757839             1   
+1725160                  N         -73.976326         40.759682             3   
+
+         fare_amount  extra  mta_tax  tip_amount  tolls_amount  \
+0               12.0    1.0      0.5        3.25           0.0   
+7                7.0    0.5      0.5        1.66           0.0   
+9                6.5    0.5      0.5        1.55           0.0   
+16              12.5    1.0      0.5        0.00           0.0   
+29              17.5    1.0      0.5        3.70           0.0   
+48              12.5    0.5      0.5        2.76           0.0   
+1364             4.0    0.0      0.5        0.00           0.0   
+5845             9.8    0.0      0.5        0.00           0.0   
+958964           7.0    0.0      0.5        0.00           0.0   
+1725160          2.5    0.5      0.5        0.00           0.0   
+
+         improvement_surcharge  total_amount  
+0                          0.3         17.05  
+7                          0.3          9.96  
+9                          0.3          9.35  
+16                         0.3         14.30  
+29                         0.3         23.00  
+48                         0.3         16.56  
+1364                       0.3          4.80  
+5845                       0.3         10.60  
+958964                     0.3          7.80  
+1725160                    0.3          3.80  
+
+Ray took (hh:mm:ss.ms) 0:00:25.176333
+
+Pandas's result:
+         VendorID tpep_pickup_datetime tpep_dropoff_datetime  passenger_count  \
+0               2  2015-01-15 19:05:39   2015-01-15 19:23:42                1   
+7               1  2015-01-10 20:33:39   2015-01-10 20:42:20                3   
+9               1  2015-01-10 20:33:40   2015-01-10 20:40:44                2   
+16              2  2015-01-15 19:05:40   2015-01-15 19:21:00                5   
+29              2  2015-01-15 19:05:42   2015-01-15 19:21:40                6   
+48              2  2015-01-25 00:13:07   2015-01-25 00:27:08                4   
+1364            1  2015-01-26 13:55:39   2015-01-26 13:58:54                0   
+5845            2  2015-01-02 20:14:40   2015-01-02 20:14:44                9   
+958964          2  2015-01-16 03:09:54   2015-01-16 03:09:57                7   
+1725160         1  2015-01-21 20:16:10   2015-01-21 20:16:37                8   
+
+         trip_distance  pickup_longitude  pickup_latitude  RateCodeID  \
+0                 1.59        -73.993896        40.750111           1   
+7                 0.80        -74.002663        40.734142           1   
+9                 0.90        -73.985588        40.767948           1   
+16                2.83        -73.968704        40.754246           1   
+29                5.19        -73.985291        40.744083           1   
+48                3.06        -73.992638        40.723793           1   
+1364              0.40        -73.963600        40.774048           1   
+5845              0.00        -73.950310        40.827042           5   
+958964            0.00          0.000000         0.000000           5   
+1725160           0.00        -73.975502        40.759640           1   
+
+        store_and_fwd_flag  dropoff_longitude  dropoff_latitude  payment_type  \
+0                        N         -73.974785         40.750618             1   
+7                        N         -73.995010         40.726326             1   
+9                        N         -73.985916         40.759365             1   
+16                       N         -73.955124         40.786858             2   
+29                       N         -74.009079         40.704689             1   
+48                       N         -73.964050         40.756866             1   
+1364                     N         -73.959229         40.780148             2   
+5845                     N         -73.950333         40.827053             1   
+958964                   N         -73.969177         40.757839             1   
+1725160                  N         -73.976326         40.759682             3   
+
+         fare_amount  extra  mta_tax  tip_amount  tolls_amount  \
+0               12.0    1.0      0.5        3.25           0.0   
+7                7.0    0.5      0.5        1.66           0.0   
+9                6.5    0.5      0.5        1.55           0.0   
+16              12.5    1.0      0.5        0.00           0.0   
+29              17.5    1.0      0.5        3.70           0.0   
+48              12.5    0.5      0.5        2.76           0.0   
+1364             4.0    0.0      0.5        0.00           0.0   
+5845             9.8    0.0      0.5        0.00           0.0   
+958964           7.0    0.0      0.5        0.00           0.0   
+1725160          2.5    0.5      0.5        0.00           0.0   
+
+         improvement_surcharge  total_amount  
+0                          0.3         17.05  
+7                          0.3          9.96  
+9                          0.3          9.35  
+16                         0.3         14.30  
+29                         0.3         23.00  
+48                         0.3         16.56  
+1364                       0.3          4.80  
+5845                       0.3         10.60  
+958964                     0.3          7.80  
+1725160                    0.3          3.80  
+
+Pandas took (hh:mm:ss.ms) 0:00:00.000233
+
+05: Profiling df_groupby.column.mean()
+--------------------------------------------------
+!!! Ray does not support getting columns from groupbys !!!
+!!!     df.groupby.COLUMN_NAME: Ray raises AttributeError - can't find attribute COLUMN_NAME !!!
+!!!     df.groupby['COLUMN_NAME']: Ray raises NotImplementedError !!!
+!!! Skipping for Ray !!!
+
+Pandas's result:
+passenger_count
+0     2.162647
+1    14.826122
+2    18.040789
+3     2.852763
+4     2.871686
+5     2.856184
+6     2.788518
+7     2.566667
+8     2.179000
+9     7.269091
+Name: trip_distance, dtype: float64
+
+Pandas took (hh:mm:ss.ms) 0:00:00.045624
+
+06: Profiling df.COLUMN_NAME = to_datetime(df.COLUMN_NAME)
+--------------------------------------------------
+!!! In some runs, Ray may spam complaints and hangs at this line !!!
+!!!     to_datetime(df['COLUMN_NAME']): Ray gives error 'task is a driver task and objects created by ray.put could not be reconstructed'. !!!
+!!!         df['COLUMN_NAME']: Ray then spams 'suppressing duplicate error message' until interrupted !!!
+!!!         df['COLUMN_NAME']: Ray may also spam 'ObjectID already exists in the object store' !!!
+!!!     to_datetime(df.COLUMN_NAME): Ray takes 17 seconds with this !!!
+!!!     to_datetime(df.index): Ray may yield ValueErrors in later parts !!!
+!!!     Skipping this for now to guarantee run to completion of this script !!!
+!!! Skipping for Ray !!!
+
+Pandas's result:
+   VendorID tpep_pickup_datetime tpep_dropoff_datetime  passenger_count  \
+0         2  2015-01-15 19:05:39   2015-01-15 19:23:42                1   
+1         1  2015-01-10 20:33:38   2015-01-10 20:53:28                1   
+2         1  2015-01-10 20:33:38   2015-01-10 20:43:41                1   
+
+   trip_distance  pickup_longitude  pickup_latitude  RateCodeID  \
+0           1.59        -73.993896        40.750111           1   
+1           3.30        -74.001648        40.724243           1   
+2           1.80        -73.963341        40.802788           1   
+
+  store_and_fwd_flag  dropoff_longitude  dropoff_latitude  payment_type  \
+0                  N         -73.974785         40.750618             1   
+1                  N         -73.994415         40.759109             1   
+2                  N         -73.951820         40.824413             2   
+
+   fare_amount  extra  mta_tax  tip_amount  tolls_amount  \
+0         12.0    1.0      0.5        3.25           0.0   
+1         14.5    0.5      0.5        2.00           0.0   
+2          9.5    0.5      0.5        0.00           0.0   
+
+   improvement_surcharge  total_amount  
+0                    0.3         17.05  
+1                    0.3         17.80  
+2                    0.3         10.80  
+
+Pandas took (hh:mm:ss.ms) 0:00:00.170434
+
+07: Profiling df2 = df[df.column > 0 & df.column > 0]
+--------------------------------------------------
+!!! In some runs, Ray may spam complaints and/or hang at this line. !!!
+!!!         Ray gives error 'task is a driver task and objects created by ray.put could not be reconstructed'. !!!
+!!!         Ray then spams 'suppressing duplicate error message' until interrupted !!!
+!!!         Ray may also spam 'ObjectID already exists in the object store' !!!
+!!!     df[df.COLUMN_NAME > 0]: Causes next line to spam and hang forever? May hang here. !!!
+!!!     df[df['COLUMN_NAME'] > 0]: Causes next line to spam for 2 seconds then recover. But may hang here !!!
+
+Ray's result:
+   VendorID tpep_pickup_datetime tpep_dropoff_datetime  passenger_count  \
+0         2  2015-01-15 19:05:39   2015-01-15 19:23:42                1   
+1         1  2015-01-10 20:33:38   2015-01-10 20:53:28                1   
+5         1  2015-01-10 20:33:39   2015-01-10 20:53:52                1   
+
+   trip_distance  pickup_longitude  pickup_latitude  RateCodeID  \
+0           1.59        -73.993896        40.750111           1   
+1           3.30        -74.001648        40.724243           1   
+5           9.00        -73.874374        40.774048           1   
+
+  store_and_fwd_flag  dropoff_longitude  dropoff_latitude  payment_type  \
+0                  N         -73.974785         40.750618             1   
+1                  N         -73.994415         40.759109             1   
+5                  N         -73.986977         40.758194             1   
+
+   fare_amount  extra  mta_tax  tip_amount  tolls_amount  \
+0         12.0    1.0      0.5        3.25          0.00   
+1         14.5    0.5      0.5        2.00          0.00   
+5         27.0    0.5      0.5        6.70          5.33   
+
+   improvement_surcharge  total_amount  
+0                    0.3         17.05  
+1                    0.3         17.80  
+5                    0.3         40.33  
+
+Ray took (hh:mm:ss.ms) 0:00:01.775026
+
+Pandas's result:
+   VendorID tpep_pickup_datetime tpep_dropoff_datetime  passenger_count  \
+0         2  2015-01-15 19:05:39   2015-01-15 19:23:42                1   
+1         1  2015-01-10 20:33:38   2015-01-10 20:53:28                1   
+5         1  2015-01-10 20:33:39   2015-01-10 20:53:52                1   
+
+   trip_distance  pickup_longitude  pickup_latitude  RateCodeID  \
+0           1.59        -73.993896        40.750111           1   
+1           3.30        -74.001648        40.724243           1   
+5           9.00        -73.874374        40.774048           1   
+
+  store_and_fwd_flag  dropoff_longitude  dropoff_latitude  payment_type  \
+0                  N         -73.974785         40.750618             1   
+1                  N         -73.994415         40.759109             1   
+5                  N         -73.986977         40.758194             1   
+
+   fare_amount  extra  mta_tax  tip_amount  tolls_amount  \
+0         12.0    1.0      0.5        3.25          0.00   
+1         14.5    0.5      0.5        2.00          0.00   
+5         27.0    0.5      0.5        6.70          5.33   
+
+   improvement_surcharge  total_amount  
+0                    0.3         17.05  
+1                    0.3         17.80  
+5                    0.3         40.33  
+
+Pandas took (hh:mm:ss.ms) 0:00:00.832120
+
+08: Profiling df2["new_column"] = df2.column / df2.column
+--------------------------------------------------
+!!! Ray always spams complaints for at least 2 seconds at this line. May be due to SettingWithCopyWarning raised by Pandas !!!
+!!!         Ray gives error 'task is a driver task and objects created by ray.put could not be reconstructed'. !!!
+!!!         Ray may spam ValueError: 'cannot reindex from a duplicate axis' at dataframe/dataframe.insert_col_part value, allow_duplicates!!!
+!!!         Ray may then spam 'Failed to get ObjectID as argument for remote function dataframe.utils.FUNCTION_CALLING_INSERT_COL_PART' !!!
+!!!     df['COLUMN_NAME'] = df.COLUMN_NAME / ...: Ray spams/hangs forever !!!
+!!!     df['COLUMN_NAME'] = df['COLUMN_NAME'] / ...: Ray MAY recover in 2 seconds. MAY return incorrect NaN value-- tip_fraction row 5 !!!
+Ray's result:
+The task with ID 47076cc7410d3619991a7c654dbabb4c7787c566 is a driver task and so the object created by ray.put could not be reconstructed.
+Suppressing duplicate error message.
+Suppressing duplicate error message.
+Suppressing duplicate error message.
+   VendorID tpep_pickup_datetime tpep_dropoff_datetime  passenger_count  \
+0         2  2015-01-15 19:05:39   2015-01-15 19:23:42                1   
+1         1  2015-01-10 20:33:38   2015-01-10 20:53:28                1   
+5         1  2015-01-10 20:33:39   2015-01-10 20:53:52                1   
+
+   trip_distance  pickup_longitude  pickup_latitude  RateCodeID  \
+0           1.59        -73.993896        40.750111           1   
+1           3.30        -74.001648        40.724243           1   
+5           9.00        -73.874374        40.774048           1   
+
+  store_and_fwd_flag  dropoff_longitude  dropoff_latitude  payment_type  \
+0                  N         -73.974785         40.750618             1   
+1                  N         -73.994415         40.759109             1   
+5                  N         -73.986977         40.758194             1   
+
+   fare_amount  extra  mta_tax  tip_amount  tolls_amount  \
+0         12.0    1.0      0.5        3.25          0.00   
+1         14.5    0.5      0.5        2.00          0.00   
+5         27.0    0.5      0.5        6.70          5.33   
+
+   improvement_surcharge  total_amount  tip_fraction  
+0                    0.3         17.05      0.270833  
+1                    0.3         17.80      0.137931  
+5                    0.3         40.33           NaN  
+
+Ray took (hh:mm:ss.ms) 0:00:01.330307
+
+!!! Pandas's df2['tip_fraction'] = ... raises SettingWithCopyWarning that can be ignored !!!
+!!! This is correct Pandas syntax for setting a new column !!!
+dask_port.py:272: SettingWithCopyWarning: 
+A value is trying to be set on a copy of a slice from a DataFrame.
+Try using .loc[row_indexer,col_indexer] = value instead
+
+See the caveats in the documentation: http://pandas.pydata.org/pandas-docs/stable/indexing.html#indexing-view-versus-copy
+  pd_df2["tip_fraction"] = pd_df2.tip_amount / pd_df2.fare_amount
+
+Pandas's result:
+   VendorID tpep_pickup_datetime tpep_dropoff_datetime  passenger_count  \
+0         2  2015-01-15 19:05:39   2015-01-15 19:23:42                1   
+1         1  2015-01-10 20:33:38   2015-01-10 20:53:28                1   
+5         1  2015-01-10 20:33:39   2015-01-10 20:53:52                1   
+
+   trip_distance  pickup_longitude  pickup_latitude  RateCodeID  \
+0           1.59        -73.993896        40.750111           1   
+1           3.30        -74.001648        40.724243           1   
+5           9.00        -73.874374        40.774048           1   
+
+  store_and_fwd_flag  dropoff_longitude  dropoff_latitude  payment_type  \
+0                  N         -73.974785         40.750618             1   
+1                  N         -73.994415         40.759109             1   
+5                  N         -73.986977         40.758194             1   
+
+   fare_amount  extra  mta_tax  tip_amount  tolls_amount  \
+0         12.0    1.0      0.5        3.25          0.00   
+1         14.5    0.5      0.5        2.00          0.00   
+5         27.0    0.5      0.5        6.70          5.33   
+
+   improvement_surcharge  total_amount  tip_fraction  
+0                    0.3         17.05      0.270833  
+1                    0.3         17.80      0.137931  
+5                    0.3         40.33      0.248148  
+
+Pandas took (hh:mm:ss.ms) 0:00:00.217845
+
+09: Profiling twice df2.groupby(column).new_column.mean()
+--------------------------------------------------
+!!! Ray may spam complaints and/or hang at this line. !!!
+!!!         Ray may spam ValueError: 'cannot reindex from a duplicate axis' at dataframe/dataframe.insert_col_part value, allow_duplicates!!!
+!!!         Ray may then spam 'Failed to get ObjectID as argument for remote function dataframe.utils.FUNCTION_CALLING_INSERT_COL_PART' !!!
+!!!         Ray then spams 'suppressing duplicate error message' until interrupted !!!
+!!!     df.groupby(df.COLUMN_NAME).COLUMN_NAME.mean(): DataFrame AttributeError  !!!
+!!!     df.groupby(df.COLUMN_NAME)['COLUMN_NAME'].mean(): Not yet tried !!!
+!!!     df.groupby(df['COLUMN_NAME']).COLUMN_NAME.mean(): Not yet tried !!!
+!!!     df.groupby(df['COLUMN_NAME']['COLUMN_NAME'].mean(): Possible ValueError, depending on previous parts !!!
+!!! Skipping for now as this part is dependent on previous new column and toDateTIme !!!
+!!! Skipping for Ray !!!
+
+Pandas's result:
+tpep_pickup_datetime
+0     0.242051
+1     0.250717
+2     0.266237
+3     0.394106
+4     0.319765
+5     0.239731
+6     0.208687
+7     0.206552
+8     0.220656
+9     0.210959
+10    0.219860
+11    0.214295
+12    0.243312
+13    0.259379
+14    0.281611
+15    0.220699
+16    0.226428
+17    0.294320
+18    0.226292
+19    0.580362
+20    0.256670
+21    0.264159
+22    0.230154
+23    0.259487
+Name: tip_fraction, dtype: float64
+
+Pandas took (hh:mm:ss.ms) 0:00:01.378115
+
+############# SECTION: JOINS AND CORRELATIONS #############
+
+10: Profiling payments = DataFrame({...})
+--------------------------------------------------
+
+Ray's result:
+   num payment_method
+0    1    Credit Card
+1    2           Cash
+2    3      No Charge
+3    4        Dispute
+4    5        Unknown
+5    6    Voided trip
+
+Ray took (hh:mm:ss.ms) 0:00:00.009672
+
+Pandas's result:
+   num payment_name
+0    1  Credit Card
+1    2         Cash
+2    3    No Charge
+3    4      Dispute
+4    5      Unknown
+5    6  Voided trip
+
+Pandas took (hh:mm:ss.ms) 0:00:00.000505
+
+11: Profiling df2 = df.merge(payments, ...)
+--------------------------------------------------
+!!! Ray may spam/hang complaints at this line. !!!
+!!!     Ray gives error 'task is a driver task and objects created by ray.put could not be reconstructed'. !!!
+!!!     Ray spams error 'ObjectID already exists in the object store' until interrupted
+!!!     Skipping this for now to guarantee run to completion of this script !!!
+!!! Skipping for Ray !!!
+
+Pandas's result:
+   VendorID tpep_pickup_datetime tpep_dropoff_datetime  passenger_count  \
+0         2  2015-01-15 19:05:39   2015-01-15 19:23:42                1   
+1         1  2015-01-10 20:33:38   2015-01-10 20:53:28                1   
+2         1  2015-01-10 20:33:39   2015-01-10 20:53:52                1   
+
+   trip_distance  pickup_longitude  pickup_latitude  RateCodeID  \
+0           1.59        -73.993896        40.750111           1   
+1           3.30        -74.001648        40.724243           1   
+2           9.00        -73.874374        40.774048           1   
+
+  store_and_fwd_flag  dropoff_longitude      ...       payment_type  \
+0                  N         -73.974785      ...                  1   
+1                  N         -73.994415      ...                  1   
+2                  N         -73.986977      ...                  1   
+
+   fare_amount  extra  mta_tax  tip_amount  tolls_amount  \
+0         12.0    1.0      0.5        3.25          0.00   
+1         14.5    0.5      0.5        2.00          0.00   
+2         27.0    0.5      0.5        6.70          5.33   
+
+   improvement_surcharge  total_amount  num  payment_name  
+0                    0.3         17.05    1   Credit Card  
+1                    0.3         17.80    1   Credit Card  
+2                    0.3         40.33    1   Credit Card  
+
+[3 rows x 21 columns]
+
+Pandas took (hh:mm:ss.ms) 0:00:04.999949
+
+12: Profiling df2_groupby = df2.groupby(df2.column)
+--------------------------------------------------
+!!! Skipping for now as this part is dependent on previous merge !!!
+!!! Skipping for Ray !!!
+
+Pandas's result:
+          VendorID tpep_pickup_datetime tpep_dropoff_datetime  \
+0                2  2015-01-15 19:05:39   2015-01-15 19:23:42   
+7881388          1  2015-01-10 20:33:38   2015-01-10 20:43:41   
+12698380         1  2015-01-26 13:04:22   2015-01-26 13:11:32   
+12737012         2  2015-01-17 22:40:27   2015-01-17 22:43:04   
+12748984         1  2015-01-19 13:15:38   2015-01-19 13:22:03   
+
+          passenger_count  trip_distance  pickup_longitude  pickup_latitude  \
+0                       1           1.59        -73.993896        40.750111   
+7881388                 1           1.80        -73.963341        40.802788   
+12698380                1           0.80        -73.977699        40.759174   
+12737012                1           0.11        -74.002357        40.739826   
+12748984                3           0.80        -73.967339        40.803574   
+
+          RateCodeID store_and_fwd_flag  dropoff_longitude      ...       \
+0                  1                  N         -73.974785      ...        
+7881388            1                  N         -73.951820      ...        
+12698380           1                  N         -73.982956      ...        
+12737012           1                  N         -74.001114      ...        
+12748984           1                  N         -73.973701      ...        
+
+          payment_type  fare_amount  extra  mta_tax  tip_amount  tolls_amount  \
+0                    1         12.0    1.0      0.5        3.25           0.0   
+7881388              2          9.5    0.5      0.5        0.00           0.0   
+12698380             3          6.0    0.0      0.5        0.00           0.0   
+12737012             4         -3.5   -0.5     -0.5        0.00           0.0   
+12748984             5          6.0    0.0      0.5        0.00           0.0   
+
+          improvement_surcharge  total_amount  num  payment_name  
+0                           0.3         17.05    1   Credit Card  
+7881388                     0.3         10.80    2          Cash  
+12698380                    0.3          6.80    3     No Charge  
+12737012                    0.3         -4.80    4       Dispute  
+12748984                    0.3          6.80    5       Unknown  
+
+[5 rows x 21 columns]
+
+Pandas took (hh:mm:ss.ms) 0:00:01.631023
+
+13: Profiling df2_groupby.column.mean()
+--------------------------------------------------
+!!! Skipping for now as this part is dependent on previous merge !!!
+!!! Skipping for Ray !!!
+
+Pandas's result:
+payment_name
+Cash           0.000214
+Credit Card    2.998640
+Dispute       -0.021116
+No Charge      0.000591
+Unknown        0.000000
+Name: tip_amount, dtype: float64
+
+Pandas took (hh:mm:ss.ms) 0:00:00.048209
+
+14: Profiling bool1 = df2.column == 0; bool2 = df2.column == value
+--------------------------------------------------
+!!! Skipping for now as this part is dependent on previous merge !!!
+!!! Skipping for Ray !!!
+
+Pandas's result:
+0    False
+1    False
+2    False
+Name: tip_amount, dtype: bool
+
+Pandas took (hh:mm:ss.ms) 0:00:00.741157
+
+15: Profiling bools = concat([bool1, bool2], axis=1) 
+--------------------------------------------------
+!!! Skipping for now as this part is dependent on previous merge !!!
+!!! Skipping for Ray !!!
+
+Pandas's result:
+   tip_amount  payment_name
+0       False         False
+1       False         False
+2       False         False
+
+Pandas took (hh:mm:ss.ms) 0:00:00.004403
+
+16: Profiling bools.corr()
+--------------------------------------------------
+!!! Skipping for now as this part is dependent on previous merge !!!
+!!! Skipping for Ray !!!
+
+Pandas's result:
+              tip_amount  payment_name
+tip_amount      1.000000      0.948438
+payment_name    0.948438      1.000000
+
+Pandas took (hh:mm:ss.ms) 0:00:00.242345
+
+############# SECTION: SHUFFLES AND TIME SERIES #############
+
+17: Profiling df.set_index(column)
+--------------------------------------------------
+!!! Ray may spam until is interrupted here !!!
+!!!     Skipping this for now to guarantee run to completion of this script !!!
+!!! Skipping for Ray !!!
+
+Pandas's result:
+                      VendorID tpep_dropoff_datetime  passenger_count  \
+tpep_pickup_datetime                                                    
+2015-01-15 19:05:39          2   2015-01-15 19:23:42                1   
+2015-01-10 20:33:38          1   2015-01-10 20:53:28                1   
+2015-01-10 20:33:38          1   2015-01-10 20:43:41                1   
+
+                      trip_distance  pickup_longitude  pickup_latitude  \
+tpep_pickup_datetime                                                     
+2015-01-15 19:05:39            1.59        -73.993896        40.750111   
+2015-01-10 20:33:38            3.30        -74.001648        40.724243   
+2015-01-10 20:33:38            1.80        -73.963341        40.802788   
+
+                      RateCodeID store_and_fwd_flag  dropoff_longitude  \
+tpep_pickup_datetime                                                     
+2015-01-15 19:05:39            1                  N         -73.974785   
+2015-01-10 20:33:38            1                  N         -73.994415   
+2015-01-10 20:33:38            1                  N         -73.951820   
+
+                      dropoff_latitude  payment_type  fare_amount  extra  \
+tpep_pickup_datetime                                                       
+2015-01-15 19:05:39          40.750618             1         12.0    1.0   
+2015-01-10 20:33:38          40.759109             1         14.5    0.5   
+2015-01-10 20:33:38          40.824413             2          9.5    0.5   
+
+                      mta_tax  tip_amount  tolls_amount  \
+tpep_pickup_datetime                                      
+2015-01-15 19:05:39       0.5        3.25           0.0   
+2015-01-10 20:33:38       0.5        2.00           0.0   
+2015-01-10 20:33:38       0.5        0.00           0.0   
+
+                      improvement_surcharge  total_amount  
+tpep_pickup_datetime                                       
+2015-01-15 19:05:39                     0.3         17.05  
+2015-01-10 20:33:38                     0.3         17.80  
+2015-01-10 20:33:38                     0.3         10.80  
+
+Pandas took (hh:mm:ss.ms) 0:00:00.803425
+
+18: Profiling df.head() and df.tail()
+--------------------------------------------------
+!!! For some reason, Ray may spam at this simple and independent call until is interrupted here !!!
+!!! Skipping this even though this call is not dependent on previous !!!
+!!! Skipping for Ray !!!
+
+Pandas's result:
+                      VendorID tpep_dropoff_datetime  passenger_count  \
+tpep_pickup_datetime                                                    
+2015-01-10 19:01:44          1   2015-01-10 19:05:40                2   
+2015-01-10 19:01:44          1   2015-01-10 19:07:26                2   
+2015-01-10 19:01:44          1   2015-01-10 19:15:01                1   
+2015-01-10 19:01:44          1   2015-01-10 19:17:03                1   
+2015-01-10 19:01:45          1   2015-01-10 19:07:33                1   
+
+                      trip_distance  pickup_longitude  pickup_latitude  \
+tpep_pickup_datetime                                                     
+2015-01-10 19:01:44             1.0        -73.951988        40.786217   
+2015-01-10 19:01:44             0.8        -73.982742        40.728184   
+2015-01-10 19:01:44             3.4        -73.979324        40.749550   
+2015-01-10 19:01:44             1.3        -73.999565        40.738483   
+2015-01-10 19:01:45             0.7        -73.960350        40.766399   
+
+                      RateCodeID store_and_fwd_flag  dropoff_longitude  \
+tpep_pickup_datetime                                                     
+2015-01-10 19:01:44            1                  N         -73.953735   
+2015-01-10 19:01:44            1                  N         -73.974976   
+2015-01-10 19:01:44            1                  N         -73.969101   
+2015-01-10 19:01:44            1                  N         -73.981819   
+2015-01-10 19:01:45            1                  N         -73.968643   
+
+                      dropoff_latitude  payment_type  fare_amount  extra  \
+tpep_pickup_datetime                                                       
+2015-01-10 19:01:44          40.775162             1          5.5    0.0   
+2015-01-10 19:01:44          40.720013             1          6.0    0.0   
+2015-01-10 19:01:44          40.787800             2         13.5    0.0   
+2015-01-10 19:01:44          40.737652             1         10.5    0.0   
+2015-01-10 19:01:45          40.760777             2          5.5    0.0   
+
+                      mta_tax  tip_amount  tolls_amount  \
+tpep_pickup_datetime                                      
+2015-01-10 19:01:44       0.5        1.25           0.0   
+2015-01-10 19:01:44       0.5        2.00           0.0   
+2015-01-10 19:01:44       0.5        0.00           0.0   
+2015-01-10 19:01:44       0.5        2.25           0.0   
+2015-01-10 19:01:45       0.5        0.00           0.0   
+
+                      improvement_surcharge  total_amount  
+tpep_pickup_datetime                                       
+2015-01-10 19:01:44                     0.3          7.55  
+2015-01-10 19:01:44                     0.3          8.80  
+2015-01-10 19:01:44                     0.3         14.30  
+2015-01-10 19:01:44                     0.3         13.55  
+2015-01-10 19:01:45                     0.3          6.30  
+
+Pandas took (hh:mm:ss.ms) 0:00:00.000386
+
+19: Profiling df_loc = df.loc[index]
+--------------------------------------------------
+!!! Skipping this as is dependent on previous setIndex !!!
+!!! Skipping for Ray !!!
+Pandas took (hh:mm:ss.ms) 0:00:00.588997
+
+20: Profiling df_loc.head()
+--------------------------------------------------
+!!! Skipping this as is dependent on previous loc !!!
+!!! Skipping for Ray !!!
+
+Pandas's result:
+                      VendorID tpep_dropoff_datetime  passenger_count  \
+tpep_pickup_datetime                                                    
+2015-01-10 19:01:44          2   2015-01-10 19:07:03                5   
+2015-01-10 19:01:44          2   2015-01-11 00:00:00                6   
+2015-01-10 19:01:44          2   2015-01-10 19:07:08                3   
+2015-01-10 19:01:44          2   2015-01-10 19:27:35                1   
+2015-01-10 19:01:44          2   2015-01-10 19:11:16                4   
+
+                      trip_distance  pickup_longitude  pickup_latitude  \
+tpep_pickup_datetime                                                     
+2015-01-10 19:01:44            0.75        -73.991730        40.740906   
+2015-01-10 19:01:44            0.63        -73.953781        40.766129   
+2015-01-10 19:01:44            1.21        -73.947365        40.775597   
+2015-01-10 19:01:44           15.39        -73.872978        40.773876   
+2015-01-10 19:01:44            2.51        -73.972900        40.744389   
+
+                      RateCodeID store_and_fwd_flag  dropoff_longitude  \
+tpep_pickup_datetime                                                     
+2015-01-10 19:01:44            1                  N         -73.985329   
+2015-01-10 19:01:44            1                  N         -73.954430   
+2015-01-10 19:01:44            1                  N         -73.957527   
+2015-01-10 19:01:44            1                  N         -74.015488   
+2015-01-10 19:01:44            1                  N         -73.950188   
+
+                      dropoff_latitude  payment_type  fare_amount  extra  \
+tpep_pickup_datetime                                                       
+2015-01-10 19:01:44          40.742191             1          5.5    0.0   
+2015-01-10 19:01:44          40.773029             2          4.5    0.0   
+2015-01-10 19:01:44          40.761322             1          6.5    0.0   
+2015-01-10 19:01:44          40.708500             1         41.5    0.0   
+2015-01-10 19:01:44          40.775730             1         10.0    0.0   
+
+                      mta_tax  tip_amount  tolls_amount  \
+tpep_pickup_datetime                                      
+2015-01-10 19:01:44       0.5        1.10          0.00   
+2015-01-10 19:01:44       0.5        0.00          0.00   
+2015-01-10 19:01:44       0.5        1.30          0.00   
+2015-01-10 19:01:44       0.5        9.37          5.33   
+2015-01-10 19:01:44       0.5        3.00          0.00   
+
+                      improvement_surcharge  total_amount  
+tpep_pickup_datetime                                       
+2015-01-10 19:01:44                     0.3           7.4  
+2015-01-10 19:01:44                     0.3           5.3  
+2015-01-10 19:01:44                     0.3           8.6  
+2015-01-10 19:01:44                     0.3          57.0  
+2015-01-10 19:01:44                     0.3          13.8  
+
+Pandas took (hh:mm:ss.ms) 0:00:00.000248
+
+############# SECTION: TIME SERIES #############
+
+21: Profiling df_resamp = df.column.resample("1d")
+--------------------------------------------------
+!!! Skipping for now as this part is dependent on previous set_index and to_datetime !!!
+!!! Skipping for Ray !!!
+Pandas took (hh:mm:ss.ms) 0:00:02.458450
+
+22: Profiling df_mn = df_resamp.mean()
+--------------------------------------------------
+!!! Skipping for now as this part is dependent on previous !!!
+!!! Skipping for Ray !!!
+
+Pandas's result:
+tpep_pickup_datetime
+2015-01-01    1.807282
+2015-01-02    1.757090
+2015-01-03    1.775246
+2015-01-04    1.720275
+2015-01-05    1.652919
+2015-01-06    1.645666
+2015-01-07    1.646647
+2015-01-08    1.653983
+2015-01-09    1.668380
+2015-01-10    1.732242
+2015-01-11    1.713497
+2015-01-12    1.635388
+2015-01-13    1.638393
+2015-01-14    1.637154
+2015-01-15    1.641024
+2015-01-16    1.663637
+2015-01-17    1.739144
+2015-01-18    1.740550
+2015-01-19    1.678866
+2015-01-20    1.629783
+2015-01-21    1.632331
+2015-01-22    1.636085
+2015-01-23    1.656648
+2015-01-24    1.734544
+2015-01-25    1.703768
+2015-01-26    1.631261
+2015-01-27    1.712974
+2015-01-28    1.635482
+2015-01-29    1.632946
+2015-01-30    1.656738
+2015-01-31    1.726935
+Freq: D, Name: passenger_count, dtype: float64
+
+Pandas took (hh:mm:ss.ms) 0:00:00.609442
+
+23: Profiling df_mn.plot()
+--------------------------------------------------
+!!! Skipping for now as plotting doesn't seem to be installed. !!!
+!!!     Can't import PyQt5 inside matplotlib !!!
+!!! Skipping for now as this part is dependent on previous !!!
+!!! Skipping for Ray !!!
+
+24: Profiling df_roll = df.column.rolling(10)
+--------------------------------------------------
+
+Ray's result:
+Rolling [window=10,center=False,axis=0]
+
+Ray took (hh:mm:ss.ms) 0:00:00.609466
+
+Pandas's result:
+Rolling [window=10,center=False,axis=0]
+
+Pandas took (hh:mm:ss.ms) 0:00:00.000052
+
+25: Profiling df_roll.mean()
+--------------------------------------------------
+
+Ray's result:
+0           NaN
+1           NaN
+2           NaN
+3           NaN
+4           NaN
+5           NaN
+6           NaN
+7           NaN
+8           NaN
+9           1.5
+10          1.5
+11          1.5
+12          1.5
+13          1.5
+14          1.5
+15          1.5
+16          1.9
+17          2.1
+18          1.9
+19          1.9
+20          1.9
+21          1.9
+22          1.9
+23          2.0
+24          2.4
+25          2.8
+26          2.4
+27          2.0
+28          2.0
+29          2.4
+           ... 
+12748956    2.0
+12748957    2.5
+12748958    2.9
+12748959    3.0
+12748960    3.0
+12748961    3.0
+12748962    3.3
+12748963    3.4
+12748964    3.5
+12748965    3.5
+12748966    3.1
+12748967    2.7
+12748968    2.4
+12748969    2.0
+12748970    2.0
+12748971    2.0
+12748972    1.6
+12748973    1.5
+12748974    1.4
+12748975    1.5
+12748976    1.4
+12748977    1.3
+12748978    1.2
+12748979    1.1
+12748980    1.1
+12748981    1.2
+12748982    1.3
+12748983    1.3
+12748984    1.3
+12748985    1.2
+Name: passenger_count, Length: 12748986, dtype: float64
+
+Ray took (hh:mm:ss.ms) 0:00:00.588651
+
+Pandas's result:
+tpep_pickup_datetime
+2015-01-15 19:05:39    NaN
+2015-01-10 20:33:38    NaN
+2015-01-10 20:33:38    NaN
+2015-01-10 20:33:39    NaN
+2015-01-10 20:33:39    NaN
+2015-01-10 20:33:39    NaN
+2015-01-10 20:33:39    NaN
+2015-01-10 20:33:39    NaN
+2015-01-10 20:33:39    NaN
+2015-01-10 20:33:40    1.5
+2015-01-10 20:33:40    1.5
+2015-01-10 20:33:41    1.5
+2015-01-10 20:33:41    1.5
+2015-01-10 20:33:41    1.5
+2015-01-10 20:33:41    1.5
+2015-01-15 19:05:39    1.5
+2015-01-15 19:05:40    1.9
+2015-01-15 19:05:40    2.1
+2015-01-15 19:05:41    1.9
+2015-01-15 19:05:41    1.9
+2015-01-15 19:05:41    1.9
+2015-01-15 19:05:41    1.9
+2015-01-15 19:05:41    1.9
+2015-01-15 19:05:41    2.0
+2015-01-15 19:05:41    2.4
+2015-01-15 19:05:41    2.8
+2015-01-15 19:05:42    2.4
+2015-01-15 19:05:42    2.0
+2015-01-15 19:05:42    2.0
+2015-01-15 19:05:42    2.4
+                      ... 
+2015-01-23 12:27:15    2.0
+2015-01-23 12:27:15    2.5
+2015-01-23 12:27:15    2.9
+2015-01-23 12:27:15    3.0
+2015-01-23 12:27:16    3.0
+2015-01-23 12:27:16    3.0
+2015-01-23 12:27:17    3.3
+2015-01-23 12:27:17    3.4
+2015-01-10 19:01:40    3.5
+2015-01-10 19:01:40    3.5
+2015-01-10 19:01:41    3.1
+2015-01-10 19:01:41    2.7
+2015-01-10 19:01:41    2.4
+2015-01-10 19:01:41    2.0
+2015-01-10 19:01:41    2.0
+2015-01-10 19:01:42    2.0
+2015-01-10 19:01:42    1.6
+2015-01-10 19:01:42    1.5
+2015-01-10 19:01:43    1.4
+2015-01-10 19:01:43    1.5
+2015-01-10 19:01:43    1.4
+2015-01-10 19:01:43    1.3
+2015-01-10 19:01:43    1.2
+2015-01-10 19:01:43    1.1
+2015-01-10 19:01:44    1.1
+2015-01-10 19:01:44    1.2
+2015-01-10 19:01:44    1.3
+2015-01-10 19:01:44    1.3
+2015-01-10 19:01:44    1.3
+2015-01-10 19:01:45    1.2
+Name: passenger_count, Length: 12748986, dtype: float64
+
+Pandas took (hh:mm:ss.ms) 0:00:00.548809
+
+############# END OF EXAMPLE #######################
+For the total example, Ray took (hh:mm:ss.ms) 0:00:26.454055
+For the total example, Pandas took (hh:mm:ss.ms) 0:01:00.744143
