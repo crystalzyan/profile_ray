@@ -1,0 +1,102 @@
+Timer unit: 1e-06 s
+
+Total time: 16.6309 s
+File: ray_kernprof.py
+Function: basic_set at line 4
+
+Line #      Hits         Time  Per Hit   % Time  Line Contents
+==============================================================
+     4                                           @profile
+     5                                           def basic_set(csvStr, csvStr2):
+     6                                           	# Import CSV
+     7         1    6836150.0 6836150.0     41.1  	ray_df = pd.read_csv(csvStr) 
+     8         1          6.0      6.0      0.0  	ray_df2 = pd.read_csv(csvStr2, 
+     9         1    9793941.0 9793941.0     58.9           parse_dates=['tpep_pickup_datetime', 'tpep_dropoff_datetime'])
+    10                                           
+    11                                           	# Accesses
+    12         1        476.0    476.0      0.0  	result = ray_df.head()
+    13         1        337.0    337.0      0.0  	result2 = ray_df2.head()
+    14                                           
+    15         1          2.0      2.0      0.0  	return ray_df
+
+Total time: 0.920573 s
+File: ray_kernprof.py
+Function: aggregation_set at line 18
+
+Line #      Hits         Time  Per Hit   % Time  Line Contents
+==============================================================
+    18                                           @profile
+    19                                           def aggregation_set(ray_df):
+    20                                           	# Convert and len
+    21         1     639643.0 639643.0     69.5  	ray_df.tpep_pickup_datetime = pd.to_datetime(ray_df.tpep_pickup_datetime) 
+    22         1         22.0     22.0      0.0  	result = len(ray_df)
+    23                                           
+    24                                           	# Groupby
+    25         1        553.0    553.0      0.1  	ray_groupby = ray_df.groupby(ray_df.passenger_count)
+    26                                           	# Ray does not support getting column from groupby below
+    27                                           	# result = ray_groupby.trip_distance.mean()
+    28                                           
+    29                                           	# Filter, new column
+    30         1     193805.0 193805.0     21.1  	ray_df2 = ray_df[(ray_df.tip_amount > 0) & (ray_df.fare_amount > 0)]
+    31         1      86550.0  86550.0      9.4  	ray_df2["tip_fraction"] = ray_df2.tip_amount / ray_df2.fare_amount
+
+Total time: 1.90064 s
+File: ray_kernprof.py
+Function: merge_set at line 39
+
+Line #      Hits         Time  Per Hit   % Time  Line Contents
+==============================================================
+    39                                           @profile
+    40                                           def merge_set(ray_df):
+    41                                           	# Merge
+    42         1          5.0      5.0      0.0  	ray_payments = pd.DataFrame({'num':[1, 2, 3, 4, 5, 6], 
+    43         1          1.0      1.0      0.0  	              'payment_name':['Credit Card', 'Cash', 'No Charge', 
+    44         1       1420.0   1420.0      0.1  	                              'Dispute', 'Unknown', 'Voided trip']})
+    45         1    1268505.0 1268505.0     66.7  	ray_df2 = ray_df.merge(ray_payments, left_on="payment_type", right_on="num")
+    46                                           
+    47                                           	# Groupby on Merge
+    48         1     472715.0 472715.0     24.9  	ray2_groupby = ray_df2.groupby(ray_df2.payment_name)
+    49                                           	# Ray does not support getting column from groupby below
+    50                                           	# result = ray2_groupby.tip_amount.mean()
+    51                                           
+    52                                           	# Boolean correlation
+    53         1       2825.0   2825.0      0.1  	ray_bool1 = ray_df2.tip_amount == 0
+    54         1     152062.0 152062.0      8.0  	ray_bool2 = ray_df2.payment_name == 'Cash'
+    55         1       3112.0   3112.0      0.2  	ray_bools = pd.concat([ray_bool1, ray_bool2], axis=1)
+
+Total time: 0.152508 s
+File: ray_kernprof.py
+Function: shuffle_set at line 60
+
+Line #      Hits         Time  Per Hit   % Time  Line Contents
+==============================================================
+    60                                           @profile
+    61                                           def shuffle_set(ray_df):
+    62                                           	# Shuffle and convert
+    63         1     151102.0 151102.0     99.1  	ray_df = ray_df.set_index('tpep_pickup_datetime') 
+    64         1        721.0    721.0      0.5  	ray_df.index = pd.to_datetime(ray_df.index)
+    65                                           
+    66                                           	# Accesses
+    67         1        374.0    374.0      0.2  	result = ray_df.head()
+    68         1        311.0    311.0      0.2  	result = ray_df.tail()
+
+Total time: 0.736968 s
+File: ray_kernprof.py
+Function: timeseries_set at line 75
+
+Line #      Hits         Time  Per Hit   % Time  Line Contents
+==============================================================
+    75                                           @profile
+    76                                           def timeseries_set(ray_df):
+    77                                           	# Shuffle and convert
+    78         1     177795.0 177795.0     24.1  	ray_df = ray_df.set_index('tpep_pickup_datetime') 
+    79         1         91.0     91.0      0.0  	ray_df.index = pd.to_datetime(ray_df.index)
+    80                                           
+    81                                           	# Resample
+    82         1     388210.0 388210.0     52.7  	ray_resamp = ray_df.passenger_count.resample('1d')
+    83         1      92427.0  92427.0     12.5  	ray_mn = ray_resamp.mean()
+    84                                           
+    85                                           	# Rolling aggregation
+    86         1        133.0    133.0      0.0  	ray_roll = ray_df.passenger_count.rolling(10)
+    87         1      78312.0  78312.0     10.6  	result = ray_roll.mean()
+
