@@ -1,5 +1,6 @@
 import ray
 import time
+import cProfile
 
 # Python native timing functionality
 def time_this(f):
@@ -25,14 +26,14 @@ def func2():
 
 
 # Ray syntax examples for comparison
-@profile
+# @profile
 #@time_this
 def ex1():
 	list1 = []
 	for i in range(5):
 		list1.append(ray.get(func.remote()))
 
-@profile
+# @profile
 #@time_this
 def ex2():
 	list2 = []
@@ -40,7 +41,7 @@ def ex2():
 		list2.append(func.remote())
 	ray.get(list2)
 
-@profile
+# @profile
 #@time_this
 def ex3():
 	list3 = []
@@ -55,8 +56,8 @@ def main():
 	ray.init()
 
 	split = -1
-	while split != 0 and split != 1:
-		split = int(input('Enter 0 to use python time module, 1 otherwise (for external timing applications):'))
+	while split != 0 and split != 1 and split != 2:
+		split = int(input('Enter 0 to use python time module, 1 for external timing applications, 2 for python cProfile module:'))
 
 	if split == 0:
 		time_this(ex1)()
@@ -66,6 +67,10 @@ def main():
 		ex1()
 		ex2()
 		ex3()
+	elif split == 2:
+		cProfile.run('ex1()')
+		cProfile.run('ex2()')
+		cProfile.run('ex3()')
 
 if __name__ == "__main__":
 	main()
