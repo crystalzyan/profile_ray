@@ -72,5 +72,7 @@ def main():
 		cProfile.run('ex2()')
 		cProfile.run('ex3()')
 
+	hang = int(input('Examples finished executing. Enter any integer to exit:'))
+
 if __name__ == "__main__":
 	main()
